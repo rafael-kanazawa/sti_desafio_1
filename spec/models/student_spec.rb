@@ -60,14 +60,14 @@ RSpec.describe Student, type: :model do
     it 'is invalid with telefone less than 9 digits' do 
       student = build(:student, telefone: '111')
       expect(student.valid?).to eq(false)
-      expect(student.errors[:telefone]).to include('is the wrong length (should be 9 characters)')
+      expect(student.errors[:telefone]).to include('is the wrong length (should be 10 characters)')
     end
 
     it 'is valid with 9 digits long telefone' do 
       student = build(:student)
       expect(student).to be_valid
-      expect(student.telefone.length).to be(9)
-      expect(student.telefone).to match(/\A\d{9}\Z/)
+      expect(student.telefone.length).to be(10)
+      expect(student.telefone).to match(/\A\d{5}-\d{4}\Z/)
     end
 
     it 'is invalid with telefone containing non digits' do 
@@ -90,7 +90,7 @@ RSpec.describe Student, type: :model do
   end
 
   context 'when student already has uffmail' do
-    it 'should return true for .has_uffmail?' do
+    it 'should return true for #has_uffmail?' do
       student = build(:student, :with_uffmail)
       expect(student.has_uffmail?).to be(true)
     end
@@ -106,27 +106,27 @@ RSpec.describe Student, type: :model do
     it 'should not give uffmail options' do
       student = build(:student, :inactive)
       expect(student.uffmail_options).to be_nil
-      expect(student.errors[:uffmail_options]).to include('student must be active active')
+      expect(student.errors[:uffmail_options]).to include('student must be active')
     end
 
-    it 'should return false for .active?' do
+    it 'should return false for #active?' do
       student = build(:student, :inactive)
       expect(student.active?).to be(false)
     end
   end
 
   context 'when student is active and has not a uffmail' do
-    it 'should return true for .active?' do
+    it 'should return true for #active?' do
       student = build(:student)
       expect(student.active?).to be(true)
     end
 
-    it 'should return false for .has_uffmail?' do 
+    it 'should return false for #has_uffmail?' do 
       student = build(:student)
       expect(student.has_uffmail?).to be(false)
     end
 
-    it 'should return a non empty array for .uffmail_options' do
+    it 'should return a non empty array for #uffmail_options' do
       student = build(:student)
       expect(student.uffmail_options).not_to be_empty
     end
@@ -136,6 +136,19 @@ RSpec.describe Student, type: :model do
       expect(
         student.uffmail_options.map{|o| o.match(/\A[\w\-.]+?@id\.uff\.br\Z/)}
       ).not_to include(nil)
+    end
+  end
+
+  describe '.create_with_csv' do
+    context 'with valid csv file' do
+      let(:file_path){"#{Rails.root}/public/alunos.csv"}
+      it 'create students records' do
+        expect{Student.create_with_csv(file_path)}.to change(Student, :count).by(31)
+      end
+
+      it 'create students without errors'do
+        expect(Student.create_with_csv(file_path).errors).to be_empty
+      end 
     end
   end
 

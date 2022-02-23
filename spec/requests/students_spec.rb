@@ -78,7 +78,49 @@ RSpec.describe "/students", type: :request do
   end
 
   describe 'POST /create_with_csv' do
-    context 'with '
   end
 
+  describe 'GET /students/:id/uffmail_options' do
+    context 'with active student without uffmail' do
+      it 'render a JSON response with uffmail options' do
+        student = create(:student)
+        get uffmail_options_path(student)
+        expect(JSON.parse(response.body)['uffmail_options']).to be_kind_of(Array)
+      end
+
+      it "responds with a ok status" do
+        student = create(:student)
+        get uffmail_options_path(student)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'with a inactive student' do
+      it 'render a JSON response without uffmail options' do
+        student = create(:student, :inactive)
+        get uffmail_options_path(student)
+        expect(JSON.parse(response.body)['uffmail_options']).to be_nil
+        
+      end
+
+      it 'render a JSON response with errors' do
+        student = create(:student, :inactive)
+        get uffmail_options_path(student)
+        expect(JSON.parse(response.body)['errors'].fetch('uffmail_options')).to include('student must be active')
+      end
+    end
+    context 'with a active student with uffmail' do
+      it 'render a JSON response without uffmail options' do
+        student = create(:student, :with_uffmail)
+        get uffmail_options_path(student)
+        expect(JSON.parse(response.body)['uffmail_options']).to be_nil
+      end
+
+      it 'render a JSON response with errors' do
+        student = create(:student, :with_uffmail)
+        get uffmail_options_path(student)
+        expect(JSON.parse(response.body)['errors'].fetch('uffmail_options')).to include('student already has a uffmail')
+      end
+    end
+  end
 end

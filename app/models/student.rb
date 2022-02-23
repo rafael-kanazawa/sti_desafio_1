@@ -6,10 +6,9 @@ class Student < ApplicationRecord
     length: { is: 6}, 
     format: { with: /\A\d{6}\Z/, message: 'only allows decimal numbers' }, uniqueness: true
   validates :telefone, 
-    length: { is: 9}, 
-    format: { with: /\A\d{9}\Z/, message: 'only allows decimal numbers' }, uniqueness: true
-  validates :email, 
-    uniqueness: true, 
+    length: { is: 10}, 
+    format: { with: /\A\d{5}-\d{4}\Z/, message: 'only allows decimal numbers' }, uniqueness: true
+  validates :email,  
     format: { 
       with: /\A[\w\-.]+?@(gmail|hotmail|yahoo|outlook)\.\w+?\Z/, 
       message: 'Must be like example@email.com' } 
@@ -18,7 +17,7 @@ class Student < ApplicationRecord
 
   def uffmail_options
     if not self.active?
-      self.errors.add(:uffmail_options, 'student must be active active')
+      self.errors.add(:uffmail_options, 'student must be active')
       return nil
     elsif self.has_uffmail?
       self.errors.add(:uffmail_options, 'student already has a uffmail')
@@ -39,11 +38,10 @@ class Student < ApplicationRecord
     uffmail != nil
   end
 
-  def self.create_records_from_file(file)
-    # TODO Realizar verificação para o caso de uma trasação não funcionar
-    CSV.foreach(file.path, headers: true) do |row|
-      Student.create! row.to_hash
-    end
+  def self.create_with_csv(file_path)
+    importer = CSVTransaction.new
+    importer.create_records_from_file(file_path)
+    return importer
   end
 
 end

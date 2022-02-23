@@ -1,13 +1,13 @@
 class StudentsController < ApplicationController
-  before_action :set_student, only: [:update, :generate_uffmail]
+  before_action :set_student, only: [:update, :generate_uffmail_options]
 
   # POST /students
   def create_with_csv
-    # Um arquivo que poderia vir de um formulário multpart com input do tipo file
-    if Student.create_records_from_file(params[:file])
-      render json: @student, status: :created, location: @student
+    importer = Student.create_with_csv(params[:file].path)
+    if importer.errors.empty?
+      render json: {messagem: 'Students were createded succefully'}, status: :created
     else
-      # TODO Cirar objeto errors
+      
       render json: errors, status: :unprocessable_entity
     end
   end
@@ -24,9 +24,9 @@ class StudentsController < ApplicationController
   def generate_uffmail_options
     uffmail_options = @student.uffmail_options
     if not uffmail_options.nil?
-      render json: @student.uffmail_options, status: :ok
+      render json:{ uffmail_options: @student.uffmail_options }, status: :ok
     else   
-      render json: @student.errors, status: :ok
+      render json:{ uffmail_options: nil, errors: @student.errors }, status: :ok
     end
   end
 

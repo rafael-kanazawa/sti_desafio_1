@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :student do
     nome {Faker::Name.name_with_middle}
     email {Faker::Internet.free_email}
-    telefone {"9" + Faker::Number.number(digits: 8).to_s}
+    telefone {"9#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"}
     matricula {Faker::Number.number(digits: 6)}
     status {:Ativo}
 
