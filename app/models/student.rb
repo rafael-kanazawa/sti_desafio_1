@@ -17,13 +17,22 @@ class Student < ApplicationRecord
   enum status: VALID_STATUS
 
   def uffmail_options
-    # Pega o nome e divide em substrings separadas por ' '
-    # Toma as substrings dois a dois, gera conjuntos e concatena com '@id.uff.br'
-    # Retorna um vetor dos conjuntos gerados
+    if not self.active?
+      self.errors.add(:uffmail_options, 'student must be active active')
+      return nil
+    elsif self.has_uffmail?
+      self.errors.add(:uffmail_options, 'student already has a uffmail')
+      return nil
+    else   
+      options = []
+      names = nome.split.map {|s| s.downcase}
+      first_name = names.shift
+      names.map {|s| "#{first_name}.#{s}@id.uff.br" }
+    end
   end
 
   def active?
-    status == :Ativo
+    status == 'Ativo'
   end
 
   def has_uffmail?

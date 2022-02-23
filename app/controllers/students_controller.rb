@@ -4,13 +4,11 @@ class StudentsController < ApplicationController
   # POST /students
   def create_with_csv
     # Um arquivo que poderia vir de um formulário multpart com input do tipo file
-    Student.create_records_from_file(params[:file])
-    @student = Student.new(student_params)
-
-    if # Sucesso
+    if Student.create_records_from_file(params[:file])
       render json: @student, status: :created, location: @student
     else
-      render json: @student.errors, status: :unprocessable_entity
+      # TODO Cirar objeto errors
+      render json: errors, status: :unprocessable_entity
     end
   end
 
@@ -23,9 +21,27 @@ class StudentsController < ApplicationController
     end
   end
 
-  def generate_uffmail
-    render json: @student.uffmail_options
+  def generate_uffmail_options
+    uffmail_options = @student.uffmail_options
+    if not uffmail_options.nil?
+      render json: @student.uffmail_options, status: :ok
+    else   
+      render json: @student.errors, status: :ok
+    end
   end
+
+  def create
+    @student = Student.new(student_params)
+    if @student.save
+      uffmail_options = @student.uffmail_options
+      render json: { student: @student, uffmail_option: uffmail_options }, 
+        status: :created, 
+        location: @student
+    else
+      render json: @student.errors, status: :unprocessable_entity
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -35,7 +51,7 @@ class StudentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def student_params
-      params.require(:student).permit(:name, :registration, :phone, :email, :uffmail, :status)
+      params.require(:student).permit(:nome, :matricula, :telefone, :email, :uffmail)
     end
 
 end
