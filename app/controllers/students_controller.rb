@@ -1,23 +1,13 @@
 class StudentsController < ApplicationController
-  before_action :set_student, only: [:show, :update, :destroy]
-
-  # GET /students
-  def index
-    @students = Student.all
-
-    render json: @students
-  end
-
-  # GET /students/1
-  def show
-    render json: @student
-  end
+  before_action :set_student, only: [:update, :generate_uffmail]
 
   # POST /students
-  def create
+  def create_with_csv
+    # Um arquivo que poderia vir de um formulário multpart com input do tipo file
+    Student.create_records_from_file(params[:file])
     @student = Student.new(student_params)
 
-    if @student.save
+    if # Sucesso
       render json: @student, status: :created, location: @student
     else
       render json: @student.errors, status: :unprocessable_entity
@@ -33,9 +23,8 @@ class StudentsController < ApplicationController
     end
   end
 
-  # DELETE /students/1
-  def destroy
-    @student.destroy
+  def generate_uffmail
+    render json: @student.uffmail_options
   end
 
   private
@@ -48,4 +37,5 @@ class StudentsController < ApplicationController
     def student_params
       params.require(:student).permit(:name, :registration, :phone, :email, :uffmail, :status)
     end
+
 end
