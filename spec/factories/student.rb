@@ -2,12 +2,9 @@ FactoryBot.define do
   factory :student do
     nome {Faker::Name.name_with_middle}
     email {Faker::Internet.free_email}
-    telefone {Faker::PhoneNumber.cell_phone}
+    telefone {"9" + Faker::Number.number(digits: 8).to_s}
     matricula {Faker::Number.number(digits: 6)}
-
-    trait :active do 
-      status {:Ativo}
-    end
+    status {"Ativo"}
 
     trait :inactive do 
       status {:Inativo}
