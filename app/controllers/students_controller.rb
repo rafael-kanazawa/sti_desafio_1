@@ -32,9 +32,10 @@ class StudentsController < ApplicationController
 
   def create
     @student = Student.new(student_params)
+    @student.status = 'Ativo'
     if @student.save
       uffmail_options = @student.uffmail_options
-      render json: { student: @student, uffmail_option: uffmail_options }, 
+      render json: { student: @student, uffmail_options: uffmail_options }, 
         status: :created, 
         location: @student
     else
@@ -51,7 +52,7 @@ class StudentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def student_params
-      params.require(:student).permit(:nome, :matricula, :telefone, :email, :uffmail)
+      params.require(:student).permit(:nome, :matricula, :telefone, :email, :uffmail, :status)
     end
 
 end
