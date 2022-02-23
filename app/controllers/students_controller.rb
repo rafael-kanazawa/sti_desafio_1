@@ -3,7 +3,7 @@ class StudentsController < ApplicationController
 
   # POST /students
   def create_with_csv
-    importer = Student.create_with_csv(params[:file])
+    importer = Student.create_with_csv(params[:file].path)
     if importer.errors.empty?
       render json: {message: 'Students were created succefully'}, status: :created
     else
