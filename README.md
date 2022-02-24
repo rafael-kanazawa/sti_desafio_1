@@ -36,4 +36,5 @@ System dependencies:
 - Rspec Rails (5.1.0)
 - Factory Bot Rails (6.2.0)
 - Rails (5.2.6)
+- Pg (1.3.3) (only production)
 
