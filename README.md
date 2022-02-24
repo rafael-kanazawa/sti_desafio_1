@@ -12,6 +12,11 @@ A partir do nome completo do usuário, combinações com do primeiro nome com os
 > POST /create_with_csv  
 
 <br>
+##### Formulário de envio de arquivo csv
+Arquivo HTML que apresentar formulário multpart para enviar arquivo csv para criação de resgistros de usuário
+> GET /csv_import
+
+<br>
 ##### Cadastro de usuário individualmente
 Enviando informações de cadastro via HTTP Request, é possivel cadastra um usuário no sistema.
 > POST /students
