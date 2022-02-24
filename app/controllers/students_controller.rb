@@ -1,5 +1,5 @@
 class StudentsController < ApplicationController
-  before_action :set_student, only: [:update, :generate_uffmail_options]
+  before_action :set_student, only: [:update, :generate_uffmail_options, :set_uffmail]
 
   # POST /students
   def create_with_csv
@@ -8,6 +8,17 @@ class StudentsController < ApplicationController
       render json: {message: 'Students were created succefully'}, status: :created
     else
       render json: importer.errors, status: :unprocessable_entity
+    end
+  end
+
+  def set_uffmail
+    if @student.update(uffmail_param)
+      render json: {
+        student: @student, 
+        message: "Sua conta no dominico id.uff será criada em breve e um SMS contendo sua primeira senha será enviado para numero cadastrado."
+      }
+    else
+      render json: @student.errors, status: :unprocessable_entity
     end
   end
 
@@ -52,6 +63,10 @@ class StudentsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def student_params
       params.require(:student).permit(:nome, :matricula, :telefone, :email, :uffmail, :status)
+    end
+
+    def uffmail_param
+      params.require(:student).permit(:uffmail)
     end
 
 end
