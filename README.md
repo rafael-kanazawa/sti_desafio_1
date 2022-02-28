@@ -1,7 +1,7 @@
 ## UFFMailService  
-#### Um serviço online para criação de email do dominio id.uff  
+#### Um serviço online para criação de email do domínio id.uff  
 #### Desenvolvimento  
-Sistema foi desenvolvimento utilizando a arquitetura MVC com framework Ruby on Rails.  
+O sistema foi desenvolvido utilizando a arquitetura MVC com framework Ruby on Rails.  
 Conjuntamente, foi empregado os princípios de TDD com ciclos de design de teste, testagem e implementação por todo o processo de desenvolvimento.  
 <br>  
 
@@ -12,13 +12,13 @@ A partir do nome completo do usuário, combinações com do primeiro nome com os
 > GET /student/:id/uffmail_options  
 <br>
 
-##### Criação de registro no banco de dado a partir de arquivo CSV  
-É possivel enviar um arquivo CSV para o sistema a fim de cadastrar multiplos usuário no banco de dados.  
+##### Criação de registros no banco de dado a partir de arquivo CSV  
+É possivel enviar um arquivo CSV para o sistema a fim de cadastrar múltiplos usuário no banco de dados.  
 > POST /create_with_csv  
 <br>
 
 ##### Formulário de envio de arquivo csv  
-Arquivo HTML que apresentar formulário multpart para enviar arquivo csv para criação de resgistros de usuário.  
+Arquivo HTML que apresentar formulário multipart para enviar um arquivo csv para criação de registros de usuário.  
 > GET /csv_import  
 <br>
 
@@ -27,7 +27,7 @@ Enviando informações de cadastro via HTTP Request, é possivel cadastra um usu
 > POST /students  
 <br>
 
-##### Atualização de resgitro de usuário  
+##### Atualização de registro de usuário  
 Enviando as informações novas via HTTP Request, é possivel atualizar as informações de uma usuário já cadastrado.  
 > PUT/PATCH /student/:id  
 <br>
